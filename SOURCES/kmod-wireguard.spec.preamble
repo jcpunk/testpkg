@@ -1,0 +1,5 @@
+Conflicts:	dkms-%{kmodname}
+Requires:	wireguard-kmod = %{version}-%{release}
+%if ! (0%{?rhel} && 0%{?rhel} < 8)
+Supplements:    (kernel%{?1:-%1} and %{kmodname}-tools)
+%endif
