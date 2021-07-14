@@ -11,10 +11,10 @@
 
 %define pkg wireguard
 
-%define kernel_version 4.18.0-305.el8
+%define kernel_version 4.18.0-315.el8
 
 Name:             kmod-%{pkg}
-Version:          1.0.20210424
+Version:          1.0.20210606
 Release:          1%{?dist}
 Summary:          Fast, modern, secure VPN tunnel
 
@@ -22,6 +22,8 @@ License:          GPLv2
 URL:              https://www.wireguard.com/
 
 Source0:          https://git.zx2c4.com/%{pkg}-linux-compat/snapshot/%{pkg}-linux-compat-%{version}.tar.xz
+
+Patch1:           0001-compat-account-for-latest-c8s-backports.patch
 
 ExclusiveArch:    x86_64 aarch64
 

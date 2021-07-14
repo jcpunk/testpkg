@@ -1,0 +1,44 @@
+From 50dda8ce5ee691b97ae640aba4cbe55aa9b62085 Mon Sep 17 00:00:00 2001
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Tue, 15 Jun 2021 01:13:41 +0200
+Subject: [PATCH] compat: account for latest c8s backports
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ src/compat/compat.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/compat/compat.h b/src/compat/compat.h
+index 91d4388..b204132 100644
+--- a/src/compat/compat.h
++++ b/src/compat/compat.h
+@@ -16,7 +16,7 @@
+ #define ISRHEL7
+ #elif RHEL_MAJOR == 8
+ #define ISRHEL8
+-#if RHEL_MINOR >= 4
++#if RHEL_MINOR >= 5
+ #define ISCENTOS8S
+ #endif
+ #endif
+@@ -757,7 +757,7 @@ static inline void crypto_xor_cpy(u8 *dst, const u8 *src1, const u8 *src2,
+ #define hlist_add_behind(a, b) hlist_add_after(b, a)
+ #endif
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0) && !defined(ISCENTOS8S)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0) && !defined(ISRHEL8)
+ #define totalram_pages() totalram_pages
+ #endif
+ 
+@@ -849,7 +849,7 @@ static inline void skb_mark_not_on_list(struct sk_buff *skb)
+ #endif
+ #endif
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 5, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 5, 0) && !defined(ISCENTOS8S)
+ #define genl_dumpit_info(cb) ({ \
+ 	struct { struct nlattr **attrs; } *a = (void *)((u8 *)cb->args + offsetofend(struct dump_ctx, next_allowedip)); \
+ 	BUILD_BUG_ON(sizeof(cb->args) < offsetofend(struct dump_ctx, next_allowedip) + sizeof(*a)); \
+-- 
+2.31.1
+
