@@ -1,4 +1,6 @@
 %global _use_internal_dependency_generator 0
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1967291
 %global debug_package %{nil}
 
 %define __spec_install_post \
@@ -7,11 +9,13 @@
   %{__os_install_post} \
   %{__mod_compress_install_post}
 
-%define __mod_compress_install_post find %{buildroot}/lib/modules -type f -name \*.ko -exec xz \{\} \\;
+#%%define __mod_compress_install_post find %{buildroot}/%{__kmod_path} -type f -name \*.ko -exec xz \{\} \\;
 
 %define pkg wireguard
 
-%define kernel_version 4.18.0-315.el8
+# to pick a specific kernel use `--define "kernel_version 4.18.0-315.el8"`
+%define latest_kernel %(rpm -q --qf '%{VERSION}-%{RELEASE}\\\n' $(rpm -q kernel-devel | /usr/lib/rpm/redhat/rpmsort -r | head -n 1) | head -n 1)
+%{!?kernel_version:%{expand:%%global kernel_version %{latest_kernel}}}
 
 Name:             kmod-%{pkg}
 Version:          1.0.20210606
